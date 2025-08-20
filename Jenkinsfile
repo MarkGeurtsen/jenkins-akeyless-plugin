@@ -2,6 +2,11 @@ pipeline {
   agent any
 
   stages {
+    stage('Check GW URL') {
+      steps {
+        echo "Gateway URL is: ${GW_URL}"
+      }
+    }
     stage('Get Secret') {
       steps {
         // no need for script{} unless you're doing Groovy logic/defs
