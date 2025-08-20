@@ -2,18 +2,12 @@ pipeline {
   agent any
 
   stages {
-    stage('Check GW URL') {
-      steps {
-        echo "Gateway URL is: ${GW_URL}"
-      }
-    }
     stage('Get Secret') {
       steps {
-        // no need for script{} unless you're doing Groovy logic/defs
         withAkeyless(
           configuration: [
             akeylessCredentialId: 'akeyless-access',   // Jenkins Credentials ID
-            akeylessUrl: "${GW_URL}",
+            akeylessUrl: "${GW_URL}", // Global variable reference
             timeout: 60,
             skipSslVerification: false
           ],
@@ -32,9 +26,4 @@ pipeline {
         }
       }
     }
-
-    stage('Build')  { steps { echo 'Building...'  } }
-    stage('Test')   { steps { echo 'Testing...'   } }
-    stage('Deploy') { steps { echo 'Deploying...' } }
-  }
 }
