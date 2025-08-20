@@ -1,52 +1,35 @@
 pipeline {
-    agent any
+  agent any
 
-    
-    stages {
-
-        stage('Get Secret') {
-            steps {
-                script {
-                    
-                    withAkeyless(
-                    configuration: [
-                      akeylessCredentialId: 'cce3cbb6-1342-4326-b24f-72b33bbdcf8a', // Jenkins Credentials ID for Akeyless auth
-                      akeylessUrl: 'https://api.akeyless.io',
-                      timeout: 60,
-                      skipSslVerification: false
-                    ],
-                    akeylessSecrets: [
-                      // Example: JSON secret with keys 'username' and 'password'
-                      [path: '/app/db-credentials', secretValues: [
-                        [secretKey: 'username', envVar: 'DB_USER', isRequired: true],
-                        [secretKey: 'password', envVar: 'DB_PASS', isRequired: true]
-                      ]],
-                      // Example: single-value secret (retrieve all as 'data')
-                      [path: '/app/api-key', secretValues: [
-                        [secretKey: 'data', envVar: 'API_KEY', isRequired: true]
-                      ]]
-                    ]
-                  )
-                }
-            }
+  stages {
+    stage('Get Secret') {
+      steps {
+        // no need for script{} unless you're doing Groovy logic/defs
+        withAkeyless(
+          configuration: [
+            akeylessCredentialId: 'akeyless-access',   // Jenkins Credentials ID
+            akeylessUrl: 'https://api.akeyless.io',
+            timeout: 60,
+            skipSslVerification: false
+          ],
+          akeylessSecrets: [
+            [path: '/1-static-secret/MyFirstSecret', secretValues: [
+              [secretKey: 'username', envVar: 'DB_USER', isRequired: true],
+              [secretKey: 'password', envVar: 'DB_PASS', isRequired: true]
+            ]]
+          ]
+        ) {
+          // your steps that use the env vars go inside this block
+          sh '''
+            echo "Using DB user: $DB_USER"
+            # do real work with $DB_PASS and $API_KEY
+          '''
         }
-        
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-            }
-        }
+      }
     }
+
+    stage('Build')  { steps { echo 'Building...'  } }
+    stage('Test')   { steps { echo 'Testing...'   } }
+    stage('Deploy') { steps { echo 'Deploying...' } }
+  }
 }
