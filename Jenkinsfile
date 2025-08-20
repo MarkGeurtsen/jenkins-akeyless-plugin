@@ -5,12 +5,7 @@ pipeline {
     stage('Get Secret') {
       steps {
         withAkeyless(
-          configuration: [
-            akeylessCredentialId: 'akeyless-access',   // Jenkins Credentials ID
-            akeylessUrl: "${GW_URL}", // Global variable reference
-            timeout: 60,
-            skipSslVerification: false
-          ],
+          
           akeylessSecrets: [
             [path: '/1-static-secret/MyFirstSecret', secretValues: [
               [secretKey: 'username', envVar: 'DB_USER', isRequired: true],
