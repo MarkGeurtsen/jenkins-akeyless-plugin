@@ -10,7 +10,7 @@ pipeline {
                     
                     withAkeyless(
                     configuration: [
-                      akeylessCredentialId: 'akeyless-access', // Jenkins Credentials ID for Akeyless auth
+                      akeylessCredentialId: 'cce3cbb6-1342-4326-b24f-72b33bbdcf8a', // Jenkins Credentials ID for Akeyless auth
                       akeylessUrl: 'https://api.akeyless.io',
                       timeout: 60,
                       skipSslVerification: false
