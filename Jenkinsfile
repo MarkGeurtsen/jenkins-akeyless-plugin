@@ -13,7 +13,7 @@ pipeline {
         withAkeyless(
           configuration: [
             akeylessCredentialId: 'akeyless-access',   // Jenkins Credentials ID
-            akeylessUrl: "${GW_URL}",
+            akeylessUrl: 'https://hvp.akeyless.io',
             timeout: 60,
             skipSslVerification: false
           ],
